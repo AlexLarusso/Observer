@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Observer</title>
+</head>
+<body>
+    <script>
+   
+
+// Observer
+    var observer = (function(o){
+        window.subscribers = {};
+
+        function subscribe(type, fn){
+            if(!subscribers[type]){
+                subscribers[type] = [];
+            }
+                subscribers[type].push(fn);
+        }
+
+        function unsubscribe(type, fn){
+            var listeners = subscribers[type],
+                index;
+
+            if(!listeners) {
+                return;
+            }
+
+            index = listeners.indexOf(fn);
+debugger;
+            if(index > -1) {
+                listeners.splice(index, 1);
+            }
+
+        }
+
+        function publish(type, eObj){
+            var listeners;
+
+            if(!subscribers[type]) {
+                return;
+            }
+            if(!eObj.type) {
+                eObj.type = type;
+            }
+
+            listeners = subscribers[type];
+
+            for(var i = 0, l = listeners.length; i < l; i++){
+                listeners[i](eObj);
+            }
+        }
+
+        return {
+            subscribers: subscribers,
+            subscribe: subscribe,
+            unsubscribe: unsubscribe,
+            publish: publish
+        }
+
+    })();
+// Header
+    (function(h){
+
+        var foo = function (evt) {
+            console.log(evt.msg);
+            observer.unsubscribe('dash/test', foo);
+        };
+
+        observer.subscribe('dash/test', foo)
+
+        observer.subscribe('dash/n2', function (evt) {
+            console.log(evt.msg + ' :::::: 2');
+        })
+
+        observer.subscribe('dash/n3', function d(evt) {
+            console.log(evt.msg + ' ::::: 3');
+        })
+    })();
+
+//Dashboard
+    (function(d){
+        observer.publish('dash/test', {msg: 'Hello world'});
+        observer.publish('dash/test', {msg: 'Hello world'});
+    })();
+    </script>
+</body>
+</html>
