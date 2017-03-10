@@ -28,7 +28,7 @@
             }
 
             index = listeners.indexOf(fn);
-debugger;
+
             if(index > -1) {
                 listeners.splice(index, 1);
             }
@@ -53,10 +53,10 @@ debugger;
         }
 
         return {
-            subscribers: subscribers,
-            subscribe: subscribe,
-            unsubscribe: unsubscribe,
-            publish: publish
+            subscribers,
+            subscribe,
+            unsubscribe,
+            publish
         }
 
     })();
